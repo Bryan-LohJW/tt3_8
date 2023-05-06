@@ -151,6 +151,7 @@
 	padding: 0 1rem;
 	display: flex;
 	justify-content: space-between;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 .footerLinks {
@@ -179,6 +180,7 @@
 	height: 2rem;
 	padding: 1px;
 	width: auto;
+	color: white;
 }
 
 .social:hover {
