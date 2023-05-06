@@ -4,16 +4,19 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, un
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost:3306/expenseclaimsdata'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3306/expenseclaimsdata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+<<<<<<< Updated upstream
 class Department(db.Model):
     code = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
 
     def __init__(self, name):
         self.name = name
+=======
+>>>>>>> Stashed changes
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,7 +38,11 @@ class Employee(db.Model):
 
 class EmployeeProjects(db.Model):
     project_id = db.Column(db.Integer, primary_key=True)
+<<<<<<< Updated upstream
     employee_id = db.Column(db.Integer, db.ForeignKey('Employee.id'))
+=======
+    employee_id = db.Column(db.Integer,  db.ForeignKey('Employee.id'))
+>>>>>>> Stashed changes
     name = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(255), nullable=False)
     budget = db.Column(db.Float, nullable=False)
@@ -48,6 +55,7 @@ class EmployeeProjects(db.Model):
         self.password = password
         self.bank_account_no = bank_account_no
 
+<<<<<<< Updated upstream
 
 class Expense(db.Model):
     claim_id = db.Column(db.Integer, primary_key=True)
@@ -79,6 +87,12 @@ def employee():
     employees = Employee.query.all()
     return employees
 # @app.route("/claims/<int:claim_id>")
+=======
+@app.route('/employee')
+def displayEmployeeRecord():
+    employees = Employee.query.all()
+    return employees
+>>>>>>> Stashed changes
 
 if __name__ == '__main__':
     app.run(debug=True)
