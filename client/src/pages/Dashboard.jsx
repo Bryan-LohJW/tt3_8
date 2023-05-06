@@ -1,6 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
+function deleteClaim() {
+    return 
+}
+
 const anotherData = [
         {"EmployeeID": "10011",
         "ExpenseDate": "2023-04-29T08:30:00+08:00",
@@ -45,18 +49,31 @@ const Dashboard = () => {
                         <th>Project ID</th>
                         <th>Claim ID</th>
                         <th>Currency</th>
+                        <th>Delete Claim</th>
                     </tr>
                 </thead>
                 <br/>
                 <tbody style={{textAlign:"center"}}>
                     {anotherData.map(data => {
-                        return <tr>
-                            <td>{data.EmployeeID}</td>
-                            <td>{data.Status}</td>
-                            <td>{data.ProjectID}</td>
-                            <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
-                            <td>{data.CurrencyID}</td>
-                        </tr>
+                        if (data.Status=='Approved') {
+                            return <tr>
+                                <td>{data.EmployeeID}</td>
+                                <td>{data.Status}</td>
+                                <td>{data.ProjectID}</td>
+                                <td>{data.ClaimID}</td>
+                                <td>{data.CurrencyID}</td>
+                                <td onClick={deleteClaim}>X</td>
+                            </tr>
+                        } else {
+                            return <tr>
+                                <td>{data.EmployeeID}</td>
+                                <td>{data.Status}</td>
+                                <td>{data.ProjectID}</td>
+                                <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
+                                <td>{data.CurrencyID}</td>
+                                <td onClick={deleteClaim}>X</td>
+                            </tr>
+                        }
                     }
                     )}   
                 </tbody>
