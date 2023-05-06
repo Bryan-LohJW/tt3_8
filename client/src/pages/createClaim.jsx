@@ -36,7 +36,7 @@ const CreateClaim = () => {
 					<input type="text" {...register('currency')} />
 				</div>
 				<div>
-					<label>Date</label>
+					<label>Date</label><br></br>
 					<input type="date" {...register('date')} />
 				</div>
 				<div>

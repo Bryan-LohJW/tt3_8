@@ -51,6 +51,7 @@ const UpdateClaim = () => {
 		console.log(response);
 	};
 	return (
+		<html>
 		<div className={classes.body}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div>
@@ -74,10 +75,10 @@ const UpdateClaim = () => {
 					<input type="text" {...register('purpose')} />
 				</div>
 
-					<input type="submit" />
-				</form>
-			</div>
-		</body>
+				<input type="submit" />
+			</form>
+		</div>
+		</html>
 	);
 };
 
