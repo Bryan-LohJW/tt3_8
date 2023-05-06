@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {useQuery} from 'react-query'
 import axios from 'axios';
-import classes from './Dashboard.css';
  
 function deleteClaim() {
     return 
@@ -89,7 +87,7 @@ const Dashboard = () => {
                             return <tr  key={data.ClaimID}>
                                 <td>{data.status}</td>
                                 <td>{data['project_id']}</td>
-                                <td><Link to={'/updateClaim/'}>{data['claim_id']}</Link></td>
+                                <td><Link to={`/updateClaim/${data['claim_id']}`}>{data['claim_id']}</Link></td>
                                 <td>{data['currency_id']}</td>
                                 <td onClick={() => {deleteClaim(data['claim_id'])}}>X</td>
                             </tr>

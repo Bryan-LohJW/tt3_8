@@ -8,7 +8,7 @@ from errors import error_response
 
 app = Flask(__name__)
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3306/expenseclaimsdata'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost:3306/expenseclaimsdata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -123,16 +123,10 @@ def update_claim(claim_id):
 
 
     # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
-<<<<<<< HEAD
     default_dept = data["chargeDefault"]
     alt_dept = data["altDepCode"]
     
     if default_dept==0 :
-=======
-    default_dept =request.json.get("chargeDefault")
-    alt_dept = request.json.get("altDepCode")
-    if default_dept==1 :
->>>>>>> d6fba295aeec316282725302de80290a3462501d
         if alt_dept !='':
             return jsonify({"message": "Default department is used"}),401
     
