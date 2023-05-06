@@ -16,8 +16,8 @@ def login():
     
     id = request.json.get('id')
     password = request.json.get('password')
-    employee = db.get_user_by_id(id)
     employee = Employee.query.filter_by(EmployeeID=id)
+    
     if not id or not password:
         return error_response(400, 'Employee ID and password required')
     
