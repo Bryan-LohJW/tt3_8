@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import useAuth from './../hooks/useAuth';
 import axios from 'axios';
-import { Navigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import classes from './login.module.css';
 import { GoLocation, GoInfo } from 'react-icons/go';
@@ -16,17 +16,21 @@ const Login = () => {
 	const { register, handleSubmit, formState } = useForm();
 	const { setToken } = useAuth();
 	const [error, setError] = useState();
+	const navigate = useNavigate();
 
 	const onSubmit = async (data) => {
-		console.log(data.email, data.password);
-		const response = await axios.post('http://localhost:5000/auth/login', {
-			email: data.email,
-			password: data.password,
+		console.log(data.id, data.password);
+		const response = await axios.post('http://localhost:5000/login', {
+			data: {
+				id: data.id,
+				password: data.password
+			}
 		});
+		console.log(response)
 		if (response.status === 200) {
 			const token = response.data.accessToken;
 			setToken(token);
-			Navigate('/dashboard');
+			navigate('/dashboard');
 		}
 		setError(response.data.message);
 	};
@@ -61,7 +65,7 @@ const Login = () => {
 						</label>
 						<input
 							type="text"
-							{...register('email')}
+							{...register('id')}
 							className={classes.input}
 						/>
 					</div>
