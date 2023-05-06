@@ -38,7 +38,7 @@ class EmployeeProjects(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey('Employee.id'))
     name = db.Column(db.String(100), nullable=False)
     status = db.Column(db.String(255), nullable=False)
-    budget = db.Column(db.float, nullable=False)
+    budget = db.Column(db.Float, nullable=False)
     lead_id = db.Column(db.String(255), nullable=False)
 
     def __init__(self,employee_id, firstname, lastname, password,bank_account_no):
@@ -57,7 +57,7 @@ class Expense(db.Model):
     expense_date = db.Column(db.String(255), nullable=False)
     amount= db.Column(db.Float, nullable=False)
     purpose = db.Column(db.String(255), nullable=False)
-    change_dept = db.Column(db.BIT, nullable=False)
+    change_dept = db.Column(db.Boolean, nullable=False)
     alternative_dept_code = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     last_edit_claim_date = db.Column(db.String(255), nullable=False)
@@ -74,7 +74,10 @@ class Expense(db.Model):
         self.status = status
         self.last_edit_claim_date = last_edit_claim_date
 
-
+@app.route('/')
+def employee():
+    employees = Employee.query.all()
+    return employees
 # @app.route("/claims/<int:claim_id>")
 
 if __name__ == '__main__':
