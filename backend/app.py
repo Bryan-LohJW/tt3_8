@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, un
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3306/expenseclaimsdata'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost:3306/expenseclaimsdata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -48,7 +48,7 @@ class EmployeeProjects(db.Model):
         self.ProjectBudget = projectbudget
         self.ProjectLeadID = projectleadid
 
-class Expense(db.Model):
+class Projectexpenseclaims(db.Model):
     ClaimID = db.Column(db.Integer, primary_key=True)
     ProjectID = db.Column(db.Integer, db.ForeignKey('employeeprojects.ProjectID'))
     EmployeeID = db.Column(db.Integer, db.ForeignKey('employee.EmployeeID'))
@@ -56,7 +56,7 @@ class Expense(db.Model):
     ExpenseDate = db.Column(db.String(255), nullable=False)
     Amount = db.Column(db.Float, nullable=False)
     Purpose = db.Column(db.String(255), nullable=False)
-    ChangeToDefaultDepartment = db.Column(db.Boolean, nullable=False)
+    ChargeToDefaultDept = db.Column(db.Boolean, nullable=False)
     AlternativeDeptCode = db.Column(db.String(20), nullable=False)
     Status = db.Column(db.String(20), nullable=False)
     LastEditedClaimDate = db.Column(db.String(255), nullable=False)
@@ -68,7 +68,7 @@ class Expense(db.Model):
         self.ExpenseDate = expense_date
         self.Amount = amount
         self.Purpose = purpose
-        self.ChangeToDefaultDepartment = change_dept
+        self.ChargeToDefaultDept = change_dept
         self.AlternativeDeptCode = alternative_dept_code
         self.Status = status
         self.LastEditedClaimDate = last_edit_claim_date
@@ -94,6 +94,44 @@ def deleteExpense(id):
     db.session.delete(Expense)
     db.session.commit()
     return jsonify({"message": "Expense deleted"})
+
+
+@app.route("/claims/<int:claim_id>", methods=['PUT'])
+def update_claim(claim_id):
+
+    #check if claim_id exists
+    claim = Projectexpenseclaims.query.get(claim_id)
+    if not claim:
+        return jsonify({"error": "Expense not found"}), 404
+
+
+    # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
+    default_dept =request.json.get("chargeDefault")
+    alt_dept = request.json.get("altDepCode")
+    if default_dept==1 :
+        if alt_dept !='':
+            return jsonify({"message": "Default department is used"})
+    
+    else:
+        if alt_dept == '':
+            return jsonify({"message": "Alternative department code required"})
+
+
+    Projectexpenseclaims.ChargeToDefaultDept = request.json.get("chargeDefault")
+    Projectexpenseclaims.AlternativeDeptCode = request.json.get("altDepCode")
+
+    Projectexpenseclaims.ExpenseDate = request.json.get("date")
+    Projectexpenseclaims.Amount = request.json.get("amount")
+    Projectexpenseclaims.Purpose = request.json.get("purpose")
+
+    Projectexpenseclaims.ProjectID = request.json.get("projectId")
+    Projectexpenseclaims.LastEditedClaimDate= request.json.get("updateDate")
+    
+    db.session.commit()
+
+    return jsonify({"message": "Expense updated"})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
