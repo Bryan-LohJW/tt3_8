@@ -9,7 +9,7 @@ import UpdateClaim from './pages/updateClaim';
 const router = createBrowserRouter([
 	{ path: '/', element: <Login /> },
 	{ path: '/createClaim', element: <CreateClaim /> },
-	{ path: '/updateClaim', element: <UpdateClaim /> },
+	{ path: '/updateClaim/:claimId', element: <UpdateClaim /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

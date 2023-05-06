@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import classes from './CreateClaim.module.css';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const MOCK_DATA = {
 	projectId: '12345',
@@ -16,11 +17,12 @@ const MOCK_DATA = {
 
 const UpdateClaim = () => {
 	const { register, handleSubmit, setValue } = useForm();
+	const { claimsId } = useParams();
 
 	useEffect(() => {
 		const getClaim = async () => {
 			const response = await axios.get(
-				'http://localhost:5000/claim/claimid'
+				`http://localhost:5000/claim/${claimsId}`
 			);
 			return response.data;
 		};
