@@ -114,6 +114,7 @@ def deleteExpense(id):
 
 @app.route("/claims/<int:claim_id>", methods=['PUT'])
 def update_claim(claim_id):
+    data = request.json.get('data')
 
     #check if claim_id exists
     claim = Projectexpenseclaims.query.get(claim_id)
@@ -122,30 +123,38 @@ def update_claim(claim_id):
 
 
     # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
+<<<<<<< HEAD
+    default_dept = data["chargeDefault"]
+    alt_dept = data["altDepCode"]
+    
+    if default_dept==0 :
+=======
     default_dept =request.json.get("chargeDefault")
     alt_dept = request.json.get("altDepCode")
     if default_dept==1 :
+>>>>>>> d6fba295aeec316282725302de80290a3462501d
         if alt_dept !='':
-            return jsonify({"message": "Default department is used"})
+            return jsonify({"message": "Default department is used"}),401
     
     else:
         if alt_dept == '':
-            return jsonify({"message": "Alternative department code required"})
+            return jsonify({"message": "Alternative department code required"}), 401
 
 
-    Projectexpenseclaims.ChargeToDefaultDept = request.json.get("chargeDefault")
-    Projectexpenseclaims.AlternativeDeptCode = request.json.get("altDepCode")
+    claim.ChargeToDefaultDept = data["chargeDefault"]
+    claim.AlternativeDeptCode = data["altDepCode"]
+    claim.CurrencyID = data['currency']
 
-    Projectexpenseclaims.ExpenseDate = request.json.get("date")
-    Projectexpenseclaims.Amount = request.json.get("amount")
-    Projectexpenseclaims.Purpose = request.json.get("purpose")
+    claim.ExpenseDate = data["date"]
+    claim.Amount = data["amount"]
+    claim.Purpose = data["purpose"]
 
-    Projectexpenseclaims.ProjectID = request.json.get("projectId")
-    Projectexpenseclaims.LastEditedClaimDate= request.json.get("updateDate")
+    claim.ProjectID = data["projectId"]
+    claim.LastEditedClaimDate= data["updateDate"]
     
     db.session.commit()
 
-    return jsonify({"message": "Expense updated"})
+    return jsonify({"message": "Expense updated"}), 200
 
 @app.route('/claims/<int:id>', methods=['GET'])
 def claims(id):
