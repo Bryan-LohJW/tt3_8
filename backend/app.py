@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify, session, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, unset_jwt_cookies
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, unset_jwt_cookies
 from uuid import uuid4
 import json
 from errors import error_response
 
 app = Flask(__name__)
+jwt = JWTManager(app)
+app.config['JWT_SECRET_KEY'] = 'super-secret'
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3306/expenseclaimsdata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -123,16 +125,10 @@ def update_claim(claim_id):
 
 
     # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
-<<<<<<< HEAD
     default_dept = data["chargeDefault"]
     alt_dept = data["altDepCode"]
     
     if default_dept==0 :
-=======
-    default_dept =request.json.get("chargeDefault")
-    alt_dept = request.json.get("altDepCode")
-    if default_dept==1 :
->>>>>>> d6fba295aeec316282725302de80290a3462501d
         if alt_dept !='':
             return jsonify({"message": "Default department is used"}),401
     
@@ -174,8 +170,6 @@ def get_claim(id):
     return claim.serialize()
     
 
-
-
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -183,7 +177,7 @@ def login():
     password = request.json.get('password')
     
     employee = Employee.query.get(id)
-    print(employee)
+
     if not id or not password:
         return error_response(400, 'Employee ID and password required')
     
@@ -205,70 +199,97 @@ def protected():
     id = get_jwt_identity()
     return jsonify({'employeeId': id}), 200
 
-'''
 @app.route('/claims', methods=['POST'])
-@jwt_required()
 def add_expense():
     cur = db.connection.cursor()
+    claim_id = str(uuid4)
+    
+    employee_id = request.json.get('employeeID')
+    employee_id_exists = db.session.query(
+    db.session.query(Employee).filter_by(EmployeeID=employee_id).exists()
+).scalar()
+    if not employee_id_exists:
+        return jsonify({"error": "EmployeeID not found"}), 404
+    
     project_id = request.json.get('projectId')
+    project_id_exists = db.session.query(
+    db.session.query(Employee).filter_by(ProjectID=project_id).exists()
+).scalar()
+    if not project_id_exists:
+        return jsonify({"error": "ProjectID not found"}), 404
+
     amount = request.json.get('amount')
+    amount_exists = db.session.query(
+    db.session.query(Employee).filter_by(Amount=amount).exists()
+).scalar()
+    if not amount_exists:
+        return jsonify({"error": "Amount is null"}), 404
+
     currency_id = request.json.get('currency')
+    currency_id_exists = db.session.query(
+    db.session.query(Employee).filter_by(CurrencyID=currency_id).exists()
+).scalar()
+    if not currency_id_exists:
+        return jsonify({"error": "CurrencyID not found"}), 404
+
     expense_date = request.json.get('date')
+    expense_date_exists = db.session.query(
+    db.session.query(Employee).filter_by(ExpenseDate=expense_date).exists()
+).scalar()
+    if not expense_date_exists:
+        return jsonify({"error": "ExpenseDate is null"}), 404
+
     purpose = request.json.get('purpose')
+    purpose_exists = db.session.query(
+    db.session.query(Employee).filter_by(Purpose=purpose).exists()
+).scalar()
+    if not purpose_exists:
+        return jsonify({"error": "Purpose is null"}), 404
+
     chargeDefault = request.json.get('chargeDefault')
+    chargeDefault_exists = db.session.query(
+    db.session.query(Employee).filter_by(ChargeToDefaultDept=chargeDefault).exists()
+).scalar()
+    if not chargeDefault_exists:
+        return jsonify({"error": "Charge To Default Deparment is null"}), 404
+
     altDepCode = request.json.get('altDepCode')
-    if chargeDefault == 0:
-        altDepCode = ""
-    expense = Projectexpenseclaims(employee_id = str(uuid4), project_id = project_id, amount=amount, currency_id=currency_id,expense_date=expense_date, purpose=purpose, chargeDefault=chargeDefault, altDepCode=altDepCode)
-    sql = """INSERT INTO ProjectExpenseClaims (age, gender, name, email, accuracy) VALUES (%d, %d, %s, %s, %f);"""
-    fields = (p)
+    altDepCode_exists = db.session.query(
+    db.session.query(Employee).filter_by(AlternativeDeptCode=altDepCode).exists()
+).scalar()
+    if not altDepCode_exists:
+        return jsonify({"error": "Alternate Department Code is null"}), 404
+
+    LastEditedClaimDate = db.Column(db.String(255), nullable=False)
+
+    status = request.json.get('status')
+    status_exists = db.session.query(
+    db.session.query(Employee).filter_by(Status=status).exists()
+).scalar()
+    if not status_exists:
+        return jsonify({"error": "Status is null"}), 404
+
+    last_edited_claim_date = request.json.get('last_edit_claim_date')
+    last_edited_claim_date_exists = db.session.query(
+    db.session.query(Employee).filter_by(LastEditedClaimDate).exists()
+).scalar()
+    if not last_edited_claim_date_exists:
+        return jsonify({"error": "Last Edited Claim Date not found"}), 404
+
+    if chargeDefault==0 :
+        if altDepCode !='':
+            return jsonify({"message": "Default department is used"})
+    
+    else:
+        if altDepCode == '':
+            return jsonify({"message": "Alternative department code required"})
+    
+    sql = """INSERT INTO ProjectExpenseClaims (claim_id, project_id, employee_id, currency_id, amount, expense_date, purpose, chargeDefault, altDepCode, status, last_edited_claim_date) VALUES (%d, %d, %d, %d, %s, %f, %s, %d, %s, %s, %s);"""
+    fields = (claim_id, project_id, employee_id, currency_id, amount, expense_date, purpose, chargeDefault, altDepCode, status, last_edited_claim_date)
     cur.execute(sql % fields)
-    
- 
-    db.session.add(expense)
     db.session.commit()
-    return jsonify({'msg': 'Expense created successfully'}), 201
+    return jsonify({'msg': 'Expense created successfully'}), 200
 
-    # claim_id = db.Column(db.Integer, primary_key=True)
-    # project_id = db.Column(db.Integer, db.ForeignKey('EmployeeProjects.project_id'))
-    
-    # employee_id = db.Column(db.Integer, db.ForeignKey('Employee.id'))
-    
-    # currency_id = db.Column(db.Integer, db.ForeignKey('Currency.id'))
-    # expense_date = db.Column(db.String(255), nullable=False)
-    # amount= db.Column(db.Float, nullable=False)
-    # purpose = db.Column(db.String(255), nullable=False)
-    # change_dept = db.Column(db.Boolean, nullable=False)
-    # alternative_dept_code = db.Column(db.String(20), nullable=False)
-    # status = db.Column(db.String(20), nullable=False)
-    # last_edit_claim_date = db.Column(db.String(255), nullable=False)
-'''
-
-# projectId: string,
-# amount: string,
-# currency: string
-# date: string,
-# purpose: string,
-# chargeDefault: boolean,
-# altDepCode: string,
-# }
-
-# Response: 
-# {
-# message: string,
-# }
-
-    # claim_id = db.Column(db.Integer, primary_key=True)
-    # project_id = db.Column(db.Integer, db.ForeignKey('EmployeeProjects.project_id'))
-    # employee_id = db.Column(db.Integer, db.ForeignKey('Employee.id'))
-    # currency_id = db.Column(db.Integer, db.ForeignKey('Currency.id'))
-    # expense_date = db.Column(db.String(255), nullable=False)
-    # amount= db.Column(db.Float, nullable=False)
-    # purpose = db.Column(db.String(255), nullable=False)
-    # change_dept = db.Column(db.Boolean, nullable=False)
-    # alternative_dept_code = db.Column(db.String(20), nullable=False)
-    # status = db.Column(db.String(20), nullable=False)
-    # last_edit_claim_date = db.Column(db.String(255), nullable=False)
 
 if __name__ == '__main__':
     app.run(debug=True)

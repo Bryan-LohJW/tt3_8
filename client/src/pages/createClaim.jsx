@@ -6,10 +6,10 @@ const CreateClaim = () => {
 	const { register, handleSubmit } = useForm();
 
 	const onSubmit = (data) => {
-		console.log(data);
-		// axios.post('http://localhost:5000/claims', {
-		// 	data: { data },
-		// });
+		//console.log(data);
+		axios.post(`http://127.0.0.1:5000/claims`, {
+			data: { data },
+		});
 	};
 	return (
 		<div className={classes.body}>
