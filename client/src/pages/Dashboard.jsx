@@ -1,12 +1,16 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, {useEffect, useState} from 'react'; 
+import {Link} from 'react-router-dom'; 
+//import {useQuery} from 'react-query' 
+import axios from 'axios';
 import classes from './Dashboard.css';
 
 function deleteClaim() {
     return 
 }
 
-const anotherData = [
+
+
+/*const anotherData = [
         {"EmployeeID": "10011",
         "ExpenseDate": "2023-04-29T08:30:00+08:00",
         "Status": "Pending",
@@ -34,9 +38,20 @@ const anotherData = [
         "Purpose": "Banking tech",  
         "AccountNumber": "20191398273"
     }
-]
+]*/
 
 const Dashboard = () => {
+    const [claims, setClaims] = useState([]);
+    useEffect(() => { 
+        const getClaims = async () => { 
+ 
+            const response = await axios.get('http://127.0.0.1:5000/claims/10011') 
+            const data = response.data.claims; 
+            console.log(data) 
+            setClaims(data); 
+        } 
+        getClaims() 
+    }, [])
     return (
         <body>
             <div>
@@ -55,28 +70,29 @@ const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody id='tablebody' style={{textAlign:"center"}}>
-                        {anotherData.map(data => {
-                            if (data.Status=='Approved') {
-                                return <tr>
-                                    <td>{data.EmployeeID}</td>
-                                    <td>{data.Status}</td>
-                                    <td>{data.ProjectID}</td>
-                                    <td>{data.ClaimID}</td>
-                                    <td>{data.CurrencyID}</td>
-                                    <td onClick={deleteClaim}>X</td>
-                                </tr>
-                            } else {
-                                return <tr>
-                                    <td>{data.EmployeeID}</td>
-                                    <td>{data.Status}</td>
-                                    <td>{data.ProjectID}</td>
-                                    <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
-                                    <td>{data.CurrencyID}</td>
-                                    <td onClick={deleteClaim}>X</td>
-                                </tr>
-                            }
-                        }
-                        )}   
+                    {claims.map(data => { 
+                        console.log(data) 
+                        if (data.status=='Approved') { 
+                            return <tr key={data['claim_id']}> 
+                                <td>{data.EmployeeID}</td> 
+                                <td>{data.status}</td> 
+                                <td>{data['project_id']}</td> 
+                                <td>{data['claim_id']}</td> 
+                                <td>{data['currency_id']}</td> 
+                                <td onClick={deleteClaim}>X</td> 
+                            </tr> 
+                        } else { 
+                            return <tr  key={data.ClaimID}> 
+                                <td>{data.EmployeeID}</td> 
+                                <td>{data.status}</td> 
+                                <td>{data['project_id']}</td> 
+                                <td><Link to={'/updateClaim/'}>{data['claim_id']}</Link></td> 
+                                <td>{data['currency_id']}</td> 
+                                <td onClick={deleteClaim}>X</td> 
+                            </tr> 
+                        } 
+                    } 
+                    )}
                     </tbody>
                 </table>
             </div>

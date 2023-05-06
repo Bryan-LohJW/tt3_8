@@ -131,7 +131,17 @@ def update_claim(claim_id):
 
     return jsonify({"message": "Expense updated"})
 
-
+@app.route('/claims/<int:id>', methods=['GET']) 
+def claims(id): 
+    claims = Projectexpenseclaims.query.filter_by(EmployeeID=id) 
+    claimList = [] 
+    for claim in claims: 
+        claimList.append(claim.serialize()) 
+    #claim_response = jsonify([e.serialize() for e in claims]) 
+    claim_response = {} 
+    claim_response['claims'] = claimList 
+     
+    return claim_response
 
 if __name__ == '__main__':
     app.run(debug=True)
