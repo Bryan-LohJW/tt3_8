@@ -4,8 +4,10 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, un
 from uuid import uuid4
 import json
 from errors import error_response
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 jwt = JWTManager(app)
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost:3306/expenseclaimsdata'
@@ -138,12 +140,13 @@ def update_claim(claim_id):
 
 @app.route('/login', methods=['POST'])
 def login():
+    data = request.json.get('data')
     
-    id = request.json.get('id')
-    password = request.json.get('password')
+    id = data['id']
+    password = data['password']
     
     employee = Employee.query.get(id)
-    print(employee)
+    print(request.json)
     if not id or not password:
         return error_response(400, 'Employee ID and password required')
     
@@ -168,28 +171,28 @@ def protected():
 
 
 
-@app.route('/claims', methods=['POST'])
-@jwt_required()
-def add_expense():
-    cur = db.connection.cursor()
-    project_id = request.json.get('projectId')
-    amount = request.json.get('amount')
-    currency_id = request.json.get('currency')
-    expense_date = request.json.get('date')
-    purpose = request.json.get('purpose')
-    chargeDefault = request.json.get('chargeDefault')
-    altDepCode = request.json.get('altDepCode')
-    if chargeDefault == 0:
-        altDepCode = ""
-    expense = Expense(employee_id = str(uuid4), project_id = project_id, amount=amount, currency_id=currency_id,expense_date=expense_date, purpose=purpose, chargeDefault=chargeDefault, altDepCode=altDepCode)
-    sql = """INSERT INTO ProjectExpenseClaims (age, gender, name, email, accuracy) VALUES (%d, %d, %s, %s, %f);"""
-    fields = (p)
-    cur.execute(sql % fields)
+# @app.route('/claims', methods=['POST'])
+# @jwt_required()
+# def add_expense():
+#     cur = db.connection.cursor()
+#     project_id = request.json.get('projectId')
+#     amount = request.json.get('amount')
+#     currency_id = request.json.get('currency')
+#     expense_date = request.json.get('date')
+#     purpose = request.json.get('purpose')
+#     chargeDefault = request.json.get('chargeDefault')
+#     altDepCode = request.json.get('altDepCode')
+#     if chargeDefault == 0:
+#         altDepCode = ""
+#     expense = Expense(employee_id = str(uuid4), project_id = project_id, amount=amount, currency_id=currency_id,expense_date=expense_date, purpose=purpose, chargeDefault=chargeDefault, altDepCode=altDepCode)
+#     sql = """INSERT INTO ProjectExpenseClaims (age, gender, name, email, accuracy) VALUES (%d, %d, %s, %s, %f);"""
+#     fields = (p)
+#     cur.execute(sql % fields)
     
  
-    db.session.add(expense)
-    db.session.commit()
-    return jsonify({'msg': 'Expense created successfully'}), 201
+#     db.session.add(expense)
+#     db.session.commit()
+#     return jsonify({'msg': 'Expense created successfully'}), 201
 
     # claim_id = db.Column(db.Integer, primary_key=True)
     # project_id = db.Column(db.Integer, db.ForeignKey('EmployeeProjects.project_id'))
