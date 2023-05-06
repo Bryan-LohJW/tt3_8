@@ -51,29 +51,28 @@ const UpdateClaim = () => {
 		console.log(response);
 	};
 	return (
-		<body>
-			<div className={classes.body}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<div>
-						<label>Project Id</label>
-						<input type="text" {...register('projectId')} />
-					</div>
-					<div>
-						<label>Amount</label>
-						<input type="number" {...register('amount')} />
-					</div>
-					<div>
-						<label>Currency</label>
-						<input type="text" {...register('currency')} />
-					</div>
-					<div>
-						<label>Date</label>
-						<input type="date" {...register('date')} />
-					</div>
-					<div>
-						<label>Purpose</label>
-						<input type="text" {...register('purpose')} />
-					</div>
+		<div className={classes.body}>
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<div>
+					<label>Project Id</label>
+					<input type="text" {...register('projectId')} />
+				</div>
+				<div>
+					<label>Amount</label>
+					<input type="number" {...register('amount')} />
+				</div>
+				<div>
+					<label>Currency</label>
+					<input type="text" {...register('currency')} />
+				</div>
+				<div>
+					<label>Date</label><br></br>
+					<input type="date" {...register('date')} />
+				</div>
+				<div>
+					<label>Purpose</label>
+					<input type="text" {...register('purpose')} />
+				</div>
 
 					<input type="submit" />
 				</form>
