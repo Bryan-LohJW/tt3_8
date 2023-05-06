@@ -12,6 +12,7 @@ const CreateClaim = () => {
 		});
 	};
 	return (
+		<body>
 		<div className={classes.body}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div>
@@ -48,7 +49,8 @@ const CreateClaim = () => {
 				</div>
 				<input type="submit" />
 			</form>
-		</div>
+			</div>
+		</body>
 	);
 };
 
