@@ -2,8 +2,6 @@
 	position: relative;
 	left: 0;
 	right: 0;
-
-	height: 100%;
 	background-color: white;
 }
 
@@ -46,4 +44,9 @@
 
 .links {
 	display: flex;
+}
+
+.outlet {
+	width: 70vw;
+	margin: auto;
 }
