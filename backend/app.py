@@ -86,6 +86,15 @@ def employee():
      
     return ""
 
+@app.route("/claims/<int:id>", methods=["DELETE"])
+def deleteExpense(id):
+    expense = Expense.query.get(id)
+    if not expense:
+        return jsonify({"error": "Expense not found"}), 404
+    db.session.delete(Expense)
+    db.session.commit()
+    return jsonify({"message": "Expense deleted"})
+
 if __name__ == '__main__':
     app.run(debug=True)
 
