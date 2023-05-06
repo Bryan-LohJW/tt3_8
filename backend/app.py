@@ -1,13 +1,17 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, unset_jwt_cookies
 from uuid import uuid4
 import json
+from errors import error_response
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost:3306/expenseclaimsdata'
+CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3306/expenseclaimsdata'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
 
 class Department(db.Model):
     DepartmentCode = db.Column(db.Integer, primary_key=True)
@@ -57,48 +61,60 @@ class Projectexpenseclaims(db.Model):
     ExpenseDate = db.Column(db.String(255), nullable=False)
     Amount = db.Column(db.Float, nullable=False)
     Purpose = db.Column(db.String(255), nullable=False)
-    ChargeToDefaultDept = db.Column(db.Integer, nullable=False)
+    ChargeToDefaultDept = db.Column(db.Boolean, nullable=False)
     AlternativeDeptCode = db.Column(db.String(20), nullable=False)
     Status = db.Column(db.String(20), nullable=False)
     LastEditedClaimDate = db.Column(db.String(255), nullable=False)
 
-    def __init__(self,project_id, employee_id, currency_id, expense_date,amount,purpose,change_dept,alternative_dept_code,status,last_edit_claim_date):
+    def __init__(self, claim_id, project_id, employee_id, currency_id, expense_date,amount,purpose,change_dept,alternative_dept_code,status,last_edit_claim_date):
+        self.ClaimID = claim_id
         self.ProjectID = project_id
         self.EmployeeID = employee_id
         self.CurrencyID = currency_id
         self.ExpenseDate = expense_date
         self.Amount = amount
         self.Purpose = purpose
-        self.ChargeToDefaultDept = change_dept
+        self.ChangeToDefaultDept = change_dept
         self.AlternativeDeptCode = alternative_dept_code
         self.Status = status
         self.LastEditedClaimDate = last_edit_claim_date
-
+        
+    def serialize(self):
+        return {
+            'employee_id': self.EmployeeID,
+            'status': self.Status,
+            'project_id': self.ProjectID, 
+            'claim_id': self.ClaimID,
+            'currency_id': self.CurrencyID,
+            'amount': self.Amount,
+        }
+        
 class Currency(db.Model):
     CurrencyID = db.Column(db.Integer, primary_key=True)
     ExchangeRate = db.Column(db.Float, nullable=False)
 
 @app.route('/', methods=['GET', 'POST'])
 def employee():
-    employees = Employee.query.filter_by(EmployeeID=10001).first()
-    employees = Employee.query.all()
-    for employee in employees:
-        print(employee)
+    employee = Employee.query.filter_by(EmployeeID=10001).first()
+    #employees = Employee.query.all()
+    
      
-    return ""
+    return jsonify({"message": "Expense deleted"})
+
 
 @app.route("/claims/<int:id>", methods=["DELETE"])
 def deleteExpense(id):
     expense = Projectexpenseclaims.query.get(id)
+    print(expense)
     if not expense:
         return jsonify({"error": "Expense not found"}), 404
     db.session.delete(expense)
     db.session.commit()
     return jsonify({"message": "Expense deleted"})
 
-
 @app.route("/claims/<int:claim_id>", methods=['PUT'])
 def update_claim(claim_id):
+    data = request.json.get('data')
 
     #check if claim_id exists
     claim = Projectexpenseclaims.query.get(claim_id)
@@ -107,32 +123,73 @@ def update_claim(claim_id):
 
 
     # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
-    default_dept =request.json.get("chargeDefault")
-    alt_dept = request.json.get("altDepCode")
-    print(request.json.get("date"))
+    default_dept = data["chargeDefault"]
+    alt_dept = data["altDepCode"]
+    
     if default_dept==0 :
         if alt_dept !='':
-            return jsonify({"message": "Default department is used"})
+            return jsonify({"message": "Default department is used"}),401
     
     else:
         if alt_dept == '':
-            return jsonify({"message": "Alternative department code required"})
+            return jsonify({"message": "Alternative department code required"}), 401
 
 
-    claim.ChargeToDefaultDept = request.json.get("chargeDefault")
-    claim.AlternativeDeptCode = request.json.get("altDepCode")
+    claim.ChargeToDefaultDept = data["chargeDefault"]
+    claim.AlternativeDeptCode = data["altDepCode"]
+    claim.CurrencyID = data['currency']
 
-    claim.ExpenseDate = request.json.get("date")
-    claim.Amount = request.json.get("amount")
-    claim.Purpose = request.json.get("purpose")
+    claim.ExpenseDate = data["date"]
+    claim.Amount = data["amount"]
+    claim.Purpose = data["purpose"]
 
-    claim.ProjectID = request.json.get("projectId")
-    claim.LastEditedClaimDate= request.json.get("updateDate")
+    claim.ProjectID = data["projectId"]
+    claim.LastEditedClaimDate= data["updateDate"]
     
     db.session.commit()
 
-    return jsonify({"message": "Expense updated"})
+    return jsonify({"message": "Expense updated"}), 200
 
+@app.route('/claims/<int:id>', methods=['GET'])
+def claims(id):
+    claims = Projectexpenseclaims.query.filter_by(EmployeeID=id)
+    claimList = []
+    for claim in claims:
+        claimList.append(claim.serialize())
+    #claim_response = jsonify([e.serialize() for e in claims])
+    claim_response = {}
+    claim_response['claims'] = claimList
+    
+    return claim_response
+
+@app.route('/login', methods=['POST'])
+def login():
+    
+    id = request.json.get('id')
+    password = request.json.get('password')
+    
+    employee = Employee.query.get(id)
+    print(employee)
+    if not id or not password:
+        return error_response(400, 'Employee ID and password required')
+    
+    if not id or employee.Password != password:
+        return error_response(401, "Employee ID or password invalid.")
+
+    firstName = employee.FirstName
+    lastName = employee.LastName
+    accountNumber = employee.BankAccountNumber
+    
+    # Check if the user exists in the database and the password is correct
+    # If successful, create an access token and return it to the client
+    access_token = create_access_token(identity=id)
+    return jsonify({'access_token': access_token, 'firstName': firstName, 'lastName': lastName, 'accountNumber' : accountNumber}), 200
+
+@app.route('/protected')
+@jwt_required()
+def protected():
+    id = get_jwt_identity()
+    return jsonify({'employeeId': id}), 200
 
 
 @app.route('/claims', methods=['POST'])
