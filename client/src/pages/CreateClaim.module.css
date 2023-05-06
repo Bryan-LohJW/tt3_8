@@ -11,8 +11,9 @@
 	font-size: 100%;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
-	padding-left: 50px;
-	line-height: 2;
+	padding-left: 30px;
+	line-height: 2;  
+	 position: absolute;
 }
 
 body {

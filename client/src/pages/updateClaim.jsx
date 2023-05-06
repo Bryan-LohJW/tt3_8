@@ -75,6 +75,10 @@ const UpdateClaim = () => {
 					<input type="text" {...register('purpose')} />
 				</div>
 
+					{/* <input type="submit" />
+				</form>
+			</div>
+		</body> */}
 				<input type="submit" />
 			</form>
 		</div>
