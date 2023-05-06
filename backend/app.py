@@ -159,6 +159,14 @@ def claims(id):
     
     return claim_response
 
+@app.route('/claim/<int:id>', methods=['GET', 'POST'])
+def get_claim(id):
+    claim = Projectexpenseclaims.query.get(id)
+    return claim.serialize()
+    
+
+
+
 @app.route('/login', methods=['POST'])
 def login():
     
