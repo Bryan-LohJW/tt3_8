@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-
+import {useQuery} from 'react-query'
+import axios from 'axios';
+ 
 function deleteClaim() {
     return 
 }
@@ -36,6 +38,18 @@ const anotherData = [
 ]
 
 const Dashboard = () => {
+    const [claims, setClaims] = useState([]);
+    useEffect(() => {
+        const getClaims = async () => {
+
+            const response = await axios.get('http://127.0.0.1:5000/claims/10011')
+            const data = response.data.claims;
+            console.log(data)
+            setClaims(data);
+        }
+        getClaims()
+    }, [])
+
     return (
         <div>
         <br/>
@@ -54,23 +68,24 @@ const Dashboard = () => {
                 </thead>
                 <br/>
                 <tbody style={{textAlign:"center"}}>
-                    {anotherData.map(data => {
-                        if (data.Status=='Approved') {
-                            return <tr>
+                    {claims.map(data => {
+                        console.log(data)
+                        if (data.status=='Approved') {
+                            return <tr key={data['claim_id']}>
                                 <td>{data.EmployeeID}</td>
-                                <td>{data.Status}</td>
-                                <td>{data.ProjectID}</td>
-                                <td>{data.ClaimID}</td>
-                                <td>{data.CurrencyID}</td>
+                                <td>{data.status}</td>
+                                <td>{data['project_id']}</td>
+                                <td>{data['claim_id']}</td>
+                                <td>{data['currency_id']}</td>
                                 <td onClick={deleteClaim}>X</td>
                             </tr>
                         } else {
-                            return <tr>
+                            return <tr  key={data.ClaimID}>
                                 <td>{data.EmployeeID}</td>
-                                <td>{data.Status}</td>
-                                <td>{data.ProjectID}</td>
-                                <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
-                                <td>{data.CurrencyID}</td>
+                                <td>{data.status}</td>
+                                <td>{data['project_id']}</td>
+                                <td><Link to={'/updateClaim/'}>{data['claim_id']}</Link></td>
+                                <td>{data['currency_id']}</td>
                                 <td onClick={deleteClaim}>X</td>
                             </tr>
                         }
