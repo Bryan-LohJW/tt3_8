@@ -104,6 +104,7 @@ def deleteExpense(id):
 
 @app.route("/claims/<int:claim_id>", methods=['PUT'])
 def update_claim(claim_id):
+    data = request.json.get('data')
 
     #check if claim_id exists
     claim = Projectexpenseclaims.query.get(claim_id)
@@ -112,31 +113,32 @@ def update_claim(claim_id):
 
 
     # # check if charge to default dept is false, if it is, then retrieve the alterntaive dept code
-    default_dept =request.json.get("chargeDefault")
-    alt_dept = request.json.get("altDepCode")
-    print(request.json.get("date"))
+    default_dept = data["chargeDefault"]
+    alt_dept = data["altDepCode"]
+    
     if default_dept==0 :
         if alt_dept !='':
-            return jsonify({"message": "Default department is used"})
+            return jsonify({"message": "Default department is used"}),401
     
     else:
         if alt_dept == '':
-            return jsonify({"message": "Alternative department code required"})
+            return jsonify({"message": "Alternative department code required"}), 401
 
 
-    claim.ChargeToDefaultDept = request.json.get("chargeDefault")
-    claim.AlternativeDeptCode = request.json.get("altDepCode")
+    claim.ChargeToDefaultDept = data["chargeDefault"]
+    claim.AlternativeDeptCode = data["altDepCode"]
+    claim.CurrencyID = data['currency']
 
-    claim.ExpenseDate = request.json.get("date")
-    claim.Amount = request.json.get("amount")
-    claim.Purpose = request.json.get("purpose")
+    claim.ExpenseDate = data["date"]
+    claim.Amount = data["amount"]
+    claim.Purpose = data["purpose"]
 
-    claim.ProjectID = request.json.get("projectId")
-    claim.LastEditedClaimDate= request.json.get("updateDate")
+    claim.ProjectID = data["projectId"]
+    claim.LastEditedClaimDate= data["updateDate"]
     
     db.session.commit()
 
-    return jsonify({"message": "Expense updated"})
+    return jsonify({"message": "Expense updated"}), 200
 
 @app.route('/login', methods=['POST'])
 def login():
