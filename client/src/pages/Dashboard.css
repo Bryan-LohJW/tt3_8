@@ -1,0 +1,28 @@
+table, th, td {
+    border: 1px solid;
+    border-color: black;
+}
+
+body { width: 1000px;
+    background-color: white; padding-top: 10px;
+    padding-bottom: 20px; font-family: 'Open Sans', Arial,sans-serif;
+    color: #100f0f; margin: 0 auto !important;
+    font-size: 14px; line-height: 20px;
+    font-size: 100%; -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%; padding-left: 50px;
+    line-height: 2;
+}
+
+h2 {
+ font-size: 20px;
+}
+
+#tablehead {
+    background-color: rgb(210, 61, 61);
+    color: aliceblue;
+    border-color: black;
+}
+
+#tablebody {
+    background-color: rgb(247, 240, 232);
+}

@@ -36,7 +36,7 @@ class Employee(db.Model):
         self.BankAccountNumber = bank_account_no
 
 
-class EmployeeProjects(db.Model):
+class Employeeprojects(db.Model):
     ProjectID = db.Column(db.Integer, primary_key=True)
     EmployeeID = db.Column(db.Integer,  db.ForeignKey('employee.EmployeeID'))
     ProjectName = db.Column(db.String(100), nullable=False)
@@ -104,7 +104,7 @@ def deleteExpense(id):
     expense = Projectexpenseclaims.query.get(id)
     if not expense:
         return jsonify({"error": "Expense not found"}), 404
-    db.session.delete(Projectexpenseclaims)
+    db.session.delete(expense)
     db.session.commit()
     return jsonify({"message": "Expense deleted"})
 
