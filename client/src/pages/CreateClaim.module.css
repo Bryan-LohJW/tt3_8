@@ -1,6 +1,47 @@
 .body {
-	background-color: black;
-	height: 100vh;
-	width: 100vw;
+	width: 1000px;
+	background-color: white;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	font-family: 'Open Sans', Arial,sans-serif;
+	color: #100f0f;
+	margin: 0 auto !important;
+	font-size: 14px;
+	line-height: 20px;
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	padding-left: 50px;
+	line-height: 2;
+}
+
+body {
+	background-image: url('/1.jpg');
+}
+
+input[type=text] {
+	width: 98%;
+	padding: 8px 10px;
+	margin: 8px 0;
 	box-sizing: border-box;
+	border: 2px solid red;
+	border-radius: 4px;
+}
+
+input[type=number] {
+	width: 98%;
+	padding: 8px 10px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid red;
+	border-radius: 4px;
+}
+
+input [type=date] {
+	width: 98%;
+	padding: 8px 10px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: 2px solid red;
+	border-radius: 4px;
 }
