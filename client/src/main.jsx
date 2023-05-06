@@ -3,8 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './pages/login';
+import CreateClaim from './pages/createClaim';
 
-const router = createBrowserRouter([{ path: '/', element: <Login /> }]);
+const router = createBrowserRouter([
+	{ path: '/', element: <Login /> },
+	{ path: '/createClaim', element: <CreateClaim /> },
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
