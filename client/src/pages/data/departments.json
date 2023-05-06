@@ -1,0 +1,65 @@
+{
+  "database": "tt3",
+  "server_version": "8.0.33",
+  "tables": [
+    {
+      "table_name": "department",
+      "columns": [
+        {
+          "column_name": "DepartmentCode",
+          "data_type": "varchar(3)",
+          "not_null": true,
+          "primary_key": true
+        },
+        {
+          "column_name": "DepartmentName",
+          "data_type": "varchar(50)",
+          "not_null": false,
+          "primary_key": false
+        }
+      ],
+      "data": [
+        {
+          "DepartmentCode": "101",
+          "DepartmentName": "Sales"
+        },
+        {
+          "DepartmentCode": "102",
+          "DepartmentName": "Marketing"
+        },
+        {
+          "DepartmentCode": "103",
+          "DepartmentName": "Human Resources"
+        },
+        {
+          "DepartmentCode": "104",
+          "DepartmentName": "Finance"
+        },
+        {
+          "DepartmentCode": "105",
+          "DepartmentName": "Information Technology"
+        },
+        {
+          "DepartmentCode": "106",
+          "DepartmentName": "Customer Service"
+        },
+        {
+          "DepartmentCode": "107",
+          "DepartmentName": "Engineering"
+        },
+        {
+          "DepartmentCode": "108",
+          "DepartmentName": "Research and Development"
+        },
+        {
+          "DepartmentCode": "109",
+          "DepartmentName": "Procurement"
+        },
+        {
+          "DepartmentCode": "110",
+          "DepartmentName": "Insurance"
+        }
+      ]
+    }
+  ]
+}

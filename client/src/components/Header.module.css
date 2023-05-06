@@ -1,0 +1,49 @@
+.body {
+	position: relative;
+	left: 0;
+	right: 0;
+
+	height: 100%;
+	background-color: white;
+}
+
+.header {
+	background-color: black;
+	display: flex;
+	justify-content: space-between;
+}
+
+.logo {
+	background-image: url('/dbs-logo.png');
+	height: 70px;
+	width: 100px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: 0px 3rem;
+}
+
+.action {
+	background-color: red;
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: large;
+	height: 100%;
+	width: fit-content;
+	text-decoration: none;
+	color: white;
+	padding: 0px 30px;
+}
+
+.action:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.links {
+	display: flex;
+}
