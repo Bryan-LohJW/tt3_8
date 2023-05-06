@@ -5,11 +5,13 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './pages/login';
 import CreateClaim from './pages/createClaim';
 import UpdateClaim from './pages/updateClaim';
+import Dashboard from './pages/Dashboard';
 
 const router = createBrowserRouter([
 	{ path: '/', element: <Login /> },
 	{ path: '/createClaim', element: <CreateClaim /> },
 	{ path: '/updateClaim/:claimId', element: <UpdateClaim /> },
+	{path: '/dashboard', element: <Dashboard />}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

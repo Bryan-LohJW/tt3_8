@@ -1,0 +1,182 @@
+{
+  "database": "tt3",
+  "server_version": "8.0.33",
+  "tables": [
+      {
+        "name": "employee",
+        "columns": [
+          {
+              "EmployeeID": "10001",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "101",
+              "Password": "Singa@123",
+              "FirstName": "Aisha",
+              "LastName": "Tan",
+              "BankAccountNumber": "1234567890"
+          },
+          {
+              "EmployeeID": "10002",
+              "SupervisorID": "10001",
+              "DepartmentCode": "101",
+              "Password": "LaKopi123!",
+              "FirstName": "Jia Hui",
+              "LastName": "Lee",
+              "BankAccountNumber": "2345678901"
+          },
+          {
+              "EmployeeID": "10003",
+              "SupervisorID": "10001",
+              "DepartmentCode": "102",
+              "Password": "SedapNyumyum77",
+              "FirstName": "Nurul",
+              "LastName": "Lim",
+              "BankAccountNumber": "3456789012"
+          },
+          {
+              "EmployeeID": "10004",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "102",
+              "Password": "GulaMelaka#1",
+              "FirstName": "Siti",
+              "LastName": "Baiduri",
+              "BankAccountNumber": "4567890123"
+          },
+          {
+              "EmployeeID": "10005",
+              "SupervisorID": "10002",
+              "DepartmentCode": "103",
+              "Password": "Majulah*Sg123",
+              "FirstName": "Shan",
+              "LastName": "Chong",
+              "BankAccountNumber": "5678901234"
+          },
+          {
+              "EmployeeID": "10006",
+              "SupervisorID": "10002",
+              "DepartmentCode": "103",
+              "Password": "ShiokLah99!",
+              "FirstName": "Kai Ming",
+              "LastName": "Tan",
+              "BankAccountNumber": "6789012345"
+          },
+          {
+              "EmployeeID": "10007",
+              "SupervisorID": "10003",
+              "DepartmentCode": "104",
+              "Password": "ChopeSeat_88",
+              "FirstName": "Rajesh",
+              "LastName": "Kumar",
+              "BankAccountNumber": "7890123456"
+          },
+          {
+              "EmployeeID": "10008",
+              "SupervisorID": "10003",
+              "DepartmentCode": "104",
+              "Password": "SiaLah#123",
+              "FirstName": "Siti",
+              "LastName": "Jamilah",
+              "BankAccountNumber": "8901234567"
+          },
+          {
+              "EmployeeID": "10009",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "105",
+              "Password": "ShiokLah88#",
+              "FirstName": "Wei Ting",
+              "LastName": "Tan",
+              "BankAccountNumber": "9012345678"
+          },
+          {
+              "EmployeeID": "10010",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "105",
+              "Password": "Majulah_Sg99",
+              "FirstName": "Johnny",
+              "LastName": "Ng",
+              "BankAccountNumber": "1123456789"
+          },
+          {
+              "EmployeeID": "10011",
+              "SupervisorID": "10006",
+              "DepartmentCode": "106",
+              "Password": "SedapNyumyum55",
+              "FirstName": "Siti",
+              "LastName": "Zubaidah",
+              "BankAccountNumber": "2345678903"
+          },
+          {
+              "EmployeeID": "10012",
+              "SupervisorID": "10006",
+              "DepartmentCode": "106",
+              "Password": "KayaToast789#",
+              "FirstName": "Kok Wai",
+              "LastName": "Lee",
+              "BankAccountNumber": "3456789014"
+          },
+          {
+              "EmployeeID": "10013",
+              "SupervisorID": "10007",
+              "DepartmentCode": "107",
+              "Password": "LaKopi_123",
+              "FirstName": "Deepa",
+              "LastName": "Padukone",
+              "BankAccountNumber": "4567890125"
+          },
+          {
+              "EmployeeID": "10015",
+              "SupervisorID": "10008",
+              "DepartmentCode": "108",
+              "Password": "ChopeSeat99#",
+              "FirstName": "Saravanan",
+              "LastName": "Kumar",
+              "BankAccountNumber": "6789012349"
+          },
+          {
+              "EmployeeID": "10016",
+              "SupervisorID": "10008",
+              "DepartmentCode": "108",
+              "Password": "GulaMelaka11#",
+              "FirstName": "Xiao Mei",
+              "LastName": "Goh",
+              "BankAccountNumber": "7890123450"
+          },
+          {
+              "EmployeeID": "10017",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "109",
+              "Password": "Majulah_Sg77",
+              "FirstName": "Rahman",
+              "LastName": "Tan",
+              "BankAccountNumber": "8901234566"
+          },
+          {
+              "EmployeeID": "10018",
+              "SupervisorID": "NULL",
+              "DepartmentCode": "109",
+              "Password": "SedapNyumyum66",
+              "FirstName": "Ying Ying",
+              "LastName": "Loh",
+              "BankAccountNumber": "9012345677"
+          },
+          {
+              "EmployeeID": "10019",
+              "SupervisorID": "10011",
+              "DepartmentCode": "110",
+              "Password": "LaKopi11#",
+              "FirstName": "Munirah",
+              "LastName": "Yasin",
+              "BankAccountNumber": "0123456781"
+          },
+          {
+              "EmployeeID": "10020",
+              "SupervisorID": "10011",
+              "DepartmentCode": "110",
+              "Password": "SiaLah33#",
+              "FirstName": "Ganesan",
+              "LastName": "Laksamana",
+              "BankAccountNumber": "1234567892"
+          }
+        ]
+    }
+  ]
+}
