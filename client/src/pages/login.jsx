@@ -47,29 +47,44 @@ const Login = () => {
 			</div>
 			<div className={classes.login}>
 				<div className={classes.logo}></div>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form
+					className={classes.form}
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<div className={classes['input-wrapper']}>
 						<label
 							className={`${classes['input-label']} ${
-								false && classes['input-label-focused']
+								true && classes['input-label-focused']
 							}`}
 						>
-							Email
+							EmployeeId
 						</label>
-						<input type="text" {...register('email')} />
+						<input
+							type="text"
+							{...register('email')}
+							className={classes.input}
+						/>
 					</div>
 					<div className={classes['input-wrapper']}>
 						<label
 							className={`${classes['input-label']} ${
-								false && classes['input-label-focused']
+								true && classes['input-label-focused']
 							}`}
 						>
 							{' '}
 							Password
 						</label>
-						<input type="password" {...register('password')} />
+						<input
+							type="password"
+							{...register('password')}
+							className={classes.input}
+						/>
 					</div>
-					<input type="submit" />
+					<input
+						type="submit"
+						className={`${classes.submit} ${classes.action}`}
+						value={'Login'}
+					/>
 					<span>{error}</span>
 				</form>
 				<button className={`${classes.help} ${classes.action}`}>
