@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import classes from './UpdateClaim.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const MOCK_DATA = {
 	projectId: '12345',
@@ -17,23 +18,27 @@ const MOCK_DATA = {
 
 const UpdateClaim = () => {
 	const { register, handleSubmit, setValue } = useForm();
-	const { claimsId } = useParams();
+	const { claimId } = useParams();
+	const navigate = useNavigate()
 
 	useEffect(() => {
+		console.log(claimId)
 		const getClaim = async () => {
 			const response = await axios.get(
-				`http://localhost:5000/claim/${claimsId}`
+				`http://localhost:5000/claim/${claimId}`
 			);
-			return response.data;
+			console.log(response)
+			setValue('projectId', response.data['project_id']);
+		setValue('amount', response.data.amount);
+		setValue('currency', response.data['currency_id']);
+		setValue('date', response.data.date);
+		setValue('purpose', response.data.purpose);
+		setValue('altDepCode', response.data['alternative_dept_code']);
 		};
 
-		const data = getClaim();
-		setValue('projectId', MOCK_DATA.projectId);
-		setValue('amount', MOCK_DATA.amount);
-		setValue('currency', MOCK_DATA.currency);
-		setValue('date', MOCK_DATA.date);
-		setValue('purpose', MOCK_DATA.purpose);
-	});
+		getClaim();
+		
+	}, []);
 
 	const onSubmit = async (data) => {
 		const newData = {
@@ -42,13 +47,16 @@ const UpdateClaim = () => {
 			currency: data.currency,
 			date: data.date,
 			purpose: data.purpose,
-			updateDate: new Date(),
+			updateDate: new Date().toISOString(),
+			chargeDefault: data.chargetToDept ? data.chargetToDept : false,
+			altDepCode: data.altDepCode
 		};
-		console.log(newData);
-		const response = await axios.put('http://localhost:5000/claims', {
+		const response = await axios.put(`http://localhost:5000/claims/${claimId}`, {
 			data: newData,
 		});
-		console.log(response);
+		if(response.status === 200) {
+			navigate('/dashboard');
+		}
 	};
 	return (
 		<div className={classes.body}>
@@ -59,7 +67,7 @@ const UpdateClaim = () => {
 				</div>
 				<div>
 					<label>Amount</label>
-					<input type="number" {...register('amount')} />
+					<input type="text" {...register('amount')} />
 				</div>
 				<div>
 					<label>Currency</label>
@@ -72,6 +80,14 @@ const UpdateClaim = () => {
 				<div>
 					<label>Purpose</label>
 					<input type="text" {...register('purpose')} />
+				</div>
+				<div>
+					<label>Charge to department</label>
+					<input type="checkbox" {...register('chargetToDept')} />
+				</div>
+				<div>
+					<label>Alternate Deparement</label>
+					<input type="text" {...register('altDepCode')} />
 				</div>
 
 				<input type="submit" />

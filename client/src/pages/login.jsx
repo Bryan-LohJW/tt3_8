@@ -15,7 +15,7 @@ import {
 const Login = () => {
 	const { register, handleSubmit, formState } = useForm();
 	const { setToken } = useAuth();
-	const [error, setError] = useState();
+	const [error, setError] = useState('');
 	const navigate = useNavigate();
 
 	const onSubmit = async (data) => {
@@ -32,7 +32,7 @@ const Login = () => {
 			setToken(token);
 			navigate('/dashboard');
 		}
-		setError(response.data.message);
+		setError('Unauthorized');
 	};
 	return (
 		<div className={classes.body}>

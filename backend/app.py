@@ -85,9 +85,11 @@ class Projectexpenseclaims(db.Model):
         return {
             'employee_id': self.EmployeeID,
             'status': self.Status,
+            'purpose': self.Purpose,
             'project_id': self.ProjectID, 
             'claim_id': self.ClaimID,
             'currency_id': self.CurrencyID,
+            'alternative_dept_code': self.AlternativeDeptCode,
             'amount': self.Amount,
         }
         
@@ -146,7 +148,7 @@ def update_claim(claim_id):
     claim.Purpose = data["purpose"]
 
     claim.ProjectID = data["projectId"]
-    claim.LastEditedClaimDate= data["updateDate"]
+    
     
     db.session.commit()
 
@@ -172,9 +174,10 @@ def get_claim(id):
 
 @app.route('/login', methods=['POST'])
 def login():
-    
-    id = request.json.get('id')
-    password = request.json.get('password')
+    data = request.json.get('data')
+    print(data)
+    id = data['id']
+    password = data['password']
     
     employee = Employee.query.get(id)
 
@@ -200,80 +203,86 @@ def protected():
     return jsonify({'employeeId': id}), 200
 
 @app.route('/claims', methods=['POST'])
+# @jwt_required()
 def add_expense():
-    cur = db.connection.cursor()
-    claim_id = str(uuid4)
+    # cur = db.connection.cursor()
+    # claim_id = str(uuid4)
+
+    last_claim = db.session.query(Projectexpenseclaims).order_by(Projectexpenseclaims.ClaimID.desc()).first() 
+
+    claim_id = last_claim.ClaimID +5 
+    
     
     employee_id = request.json.get('employeeID')
-    employee_id_exists = db.session.query(
-    db.session.query(Employee).filter_by(EmployeeID=employee_id).exists()
-).scalar()
-    if not employee_id_exists:
-        return jsonify({"error": "EmployeeID not found"}), 404
+#     employee_id_exists = db.session.query(
+#     db.session.query(Employee).filter_by(EmployeeID=employee_id).exists()
+# ).scalar()
+#     if not employee_id_exists:
+#         return jsonify({"error": "EmployeeID not found"}), 404
     
     project_id = request.json.get('projectId')
-    project_id_exists = db.session.query(
-    db.session.query(Employee).filter_by(ProjectID=project_id).exists()
-).scalar()
-    if not project_id_exists:
-        return jsonify({"error": "ProjectID not found"}), 404
+#     project_id_exists = db.session.query(
+#     db.session.query(Employeeprojects).filter_by(ProjectID=project_id).exists()
+# ).scalar()
+#     if not project_id_exists:
+#         return jsonify({"error": "ProjectID not found"}), 404
 
     amount = request.json.get('amount')
-    amount_exists = db.session.query(
-    db.session.query(Employee).filter_by(Amount=amount).exists()
-).scalar()
-    if not amount_exists:
+#     amount_exists = db.session.query(
+#     db.session.query(Employee).filter_by(Amount=amount).exists()
+# ).scalar()
+    if not amount:
         return jsonify({"error": "Amount is null"}), 404
 
     currency_id = request.json.get('currency')
     currency_id_exists = db.session.query(
-    db.session.query(Employee).filter_by(CurrencyID=currency_id).exists()
+    db.session.query(Currency).filter_by(CurrencyID=currency_id).exists()
 ).scalar()
     if not currency_id_exists:
         return jsonify({"error": "CurrencyID not found"}), 404
 
     expense_date = request.json.get('date')
-    expense_date_exists = db.session.query(
-    db.session.query(Employee).filter_by(ExpenseDate=expense_date).exists()
-).scalar()
-    if not expense_date_exists:
+#     expense_date_exists = db.session.query(
+#     db.session.query(Employee).filter_by(ExpenseDate=expense_date).exists()
+# ).scalar()
+    if not expense_date:
         return jsonify({"error": "ExpenseDate is null"}), 404
 
     purpose = request.json.get('purpose')
-    purpose_exists = db.session.query(
-    db.session.query(Employee).filter_by(Purpose=purpose).exists()
-).scalar()
-    if not purpose_exists:
+#     purpose_exists = db.session.query(
+#     db.session.query(Employee).filter_by(Purpose=purpose).exists()
+# ).scalar()
+    if not purpose:
         return jsonify({"error": "Purpose is null"}), 404
 
     chargeDefault = request.json.get('chargeDefault')
-    chargeDefault_exists = db.session.query(
-    db.session.query(Employee).filter_by(ChargeToDefaultDept=chargeDefault).exists()
-).scalar()
-    if not chargeDefault_exists:
+#     chargeDefault_exists = db.session.query(
+#     db.session.query(Employee).filter_by(ChargeToDefaultDept=chargeDefault).exists()
+# ).scalar()
+    if not chargeDefault:
         return jsonify({"error": "Charge To Default Deparment is null"}), 404
 
     altDepCode = request.json.get('altDepCode')
-    altDepCode_exists = db.session.query(
-    db.session.query(Employee).filter_by(AlternativeDeptCode=altDepCode).exists()
-).scalar()
-    if not altDepCode_exists:
+#     altDepCode_exists = db.session.query(
+#     db.session.query(Employee).filter_by(AlternativeDeptCode=altDepCode).exists()
+# ).scalar()
+    if not altDepCode:
         return jsonify({"error": "Alternate Department Code is null"}), 404
 
     LastEditedClaimDate = db.Column(db.String(255), nullable=False)
 
-    status = request.json.get('status')
-    status_exists = db.session.query(
-    db.session.query(Employee).filter_by(Status=status).exists()
-).scalar()
-    if not status_exists:
-        return jsonify({"error": "Status is null"}), 404
+#     status = request.json.get('status')
+#     status_exists = db.session.query(
+#     db.session.query(Employee).filter_by(Status=status).exists()
+# ).scalar()
+#     if not status_exists:
+#         return jsonify({"error": "Status is null"}), 404
 
     last_edited_claim_date = request.json.get('last_edit_claim_date')
-    last_edited_claim_date_exists = db.session.query(
-    db.session.query(Employee).filter_by(LastEditedClaimDate).exists()
-).scalar()
-    if not last_edited_claim_date_exists:
+#     last_edited_claim_date_exists = db.session.query(
+#     db.session.query(Employee).filter_by(LastEditedClaimDate).exists()
+# ).scalar()
+    if not last_edited_claim_date:
         return jsonify({"error": "Last Edited Claim Date not found"}), 404
 
     if chargeDefault==0 :
@@ -284,9 +293,19 @@ def add_expense():
         if altDepCode == '':
             return jsonify({"message": "Alternative department code required"})
     
-    sql = """INSERT INTO ProjectExpenseClaims (claim_id, project_id, employee_id, currency_id, amount, expense_date, purpose, chargeDefault, altDepCode, status, last_edited_claim_date) VALUES (%d, %d, %d, %d, %s, %f, %s, %d, %s, %s, %s);"""
-    fields = (claim_id, project_id, employee_id, currency_id, amount, expense_date, purpose, chargeDefault, altDepCode, status, last_edited_claim_date)
-    cur.execute(sql % fields)
+    q = (db.session.query( Employee, Employeeprojects)
+        .join(Employee)
+        .join(Employeeprojects)
+        .filter_by(EmployeeID=employee_id)
+        )
+    print(q)
+    if not q:
+        return jsonify({"error": "Employee or Project does not exist "}), 404
+
+    expense = Projectexpenseclaims(claim_id = claim_id,employee_id= employee_id,status='Pending', project_id = project_id, amount=amount, currency_id=currency_id,expense_date=expense_date, purpose=purpose, charge_dept=chargeDefault, alternative_dept_code=altDepCode,last_edit_claim_date= last_edited_claim_date)
+
+
+    db.session.add(expense)
     db.session.commit()
     return jsonify({'msg': 'Expense created successfully'}), 200
 

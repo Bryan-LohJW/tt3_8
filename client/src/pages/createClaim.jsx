@@ -1,15 +1,20 @@
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import classes from './CreateClaim.module.css';
+import { useNavigate } from 'react-router';
 
 const CreateClaim = () => {
 	const { register, handleSubmit } = useForm();
+	const navigate = useNavigate()
 
-	const onSubmit = (data) => {
+	const onSubmit = async (data) => {
 		//console.log(data);
-		axios.post(`http://127.0.0.1:5000/claims`, {
-			data: { data },
+		const response = await axios.post(`http://127.0.0.1:5000/claims`, {
+			data: { employeeId: '10010',projectId: data.projectId, amount: data.amount.toFixed(2), currency: data.currency, date: new Date().toISOString(), purpose: data.purpose, chargeDefault: data.chargeDefault, altDepCode: data.altDepCode, last_edit_claim_date: new Date().toISOString(),},
 		});
+		if(response.status === 200) {
+			navigate('')
+		}
 	};
 	return (
 		<body>
@@ -18,14 +23,6 @@ const CreateClaim = () => {
 				<div>
 					<label>Project Id</label>
 					<input type="text" {...register('projectId')} />
-				</div>
-				<div>
-					<label>First Name</label>
-					<input type="text" {...register('firstName')} />
-				</div>
-				<div>
-					<label>Last Name</label>
-					<input type="text" {...register('lastName')} />
 				</div>
 				<div>
 					<label>Amount</label>
@@ -44,8 +41,12 @@ const CreateClaim = () => {
 					<input type="text" {...register('purpose')} />
 				</div>
 				<div>
-					<label>Previous Claim Id (if any)</label>
-					<input type="text" {...register('claimsId')} />
+					<label>Charge to department</label>
+					<input type="checkbox" {...register('chargetToDept')} />
+				</div>
+				<div>
+					<label>Alternate Deparement</label>
+					<input type="text" {...register('altDepCode')} />
 				</div>
 				<input type="submit" />
 			</form>

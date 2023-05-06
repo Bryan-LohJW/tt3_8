@@ -71,6 +71,7 @@ const Dashboard = () => {
                         <th>Project ID</th>
                         <th>Claim ID</th>
                         <th>Currency</th>
+                        <th>Amount</th>
                         <th>Delete Claim</th>
                     </tr>
                 </thead>
@@ -83,14 +84,16 @@ const Dashboard = () => {
                                 <td>{data['project_id']}</td>
                                 <td>{data['claim_id']}</td>
                                 <td>{data['currency_id']}</td>
+                                <td>{data['amount']}</td>
                                 <td onClick={() => {deleteClaim(data['claim_id'])}}>X</td>
                             </tr>
                         } else {
                             return <tr  key={data.ClaimID}>
                                 <td>{data.status}</td>
                                 <td>{data['project_id']}</td>
-                                <td><Link to={'/updateClaim/'}>{data['claim_id']}</Link></td>
+                                <td><Link to={`/updateClaim/${data['claim_id']}`}>{data['claim_id']}</Link></td>
                                 <td>{data['currency_id']}</td>
+                                <td>{data['amount']}</td>
                                 <td onClick={() => {deleteClaim(data['claim_id'])}}>X</td>
                             </tr>
                         }
