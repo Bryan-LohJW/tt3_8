@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import classes from './Dashboard.css';
 
 function deleteClaim() {
     return 
@@ -37,48 +38,52 @@ const anotherData = [
 
 const Dashboard = () => {
     return (
-        <div>
-        <br/>
-            <h4>Employee Claiming Records</h4>
+        <body>
+            <div>
             <br/>
-            <table width="80%" border="1px solid black">
-                <thead>
-                    <tr>
-                        <th>Employee ID</th>
-                        <th>Status of Claim</th>
-                        <th>Project ID</th>
-                        <th>Claim ID</th>
-                        <th>Currency</th>
-                        <th>Delete Claim</th>
-                    </tr>
-                </thead>
+                <h2>Employee Claiming Records</h2>
                 <br/>
-                <tbody style={{textAlign:"center"}}>
-                    {anotherData.map(data => {
-                        if (data.Status=='Approved') {
-                            return <tr>
-                                <td>{data.EmployeeID}</td>
-                                <td>{data.Status}</td>
-                                <td>{data.ProjectID}</td>
-                                <td>{data.ClaimID}</td>
-                                <td>{data.CurrencyID}</td>
-                                <td onClick={deleteClaim}>X</td>
-                            </tr>
-                        } else {
-                            return <tr>
-                                <td>{data.EmployeeID}</td>
-                                <td>{data.Status}</td>
-                                <td>{data.ProjectID}</td>
-                                <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
-                                <td>{data.CurrencyID}</td>
-                                <td onClick={deleteClaim}>X</td>
-                            </tr>
+                <table width="80%" border="1px solid black">
+                    <thead id='tablehead'>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Status of Claim</th>
+                            <th>Project ID</th>
+                            <th>Claim ID</th>
+                            <th>Currency</th>
+                            <th>Delete Claim</th>
+                        </tr>
+                    </thead>
+                    <tbody id='tablebody' style={{textAlign:"center"}}>
+                        {anotherData.map(data => {
+                            if (data.Status=='Approved') {
+                                return <tr>
+                                    <td>{data.EmployeeID}</td>
+                                    <td>{data.Status}</td>
+                                    <td>{data.ProjectID}</td>
+                                    <td>{data.ClaimID}</td>
+                                    <td>{data.CurrencyID}</td>
+                                    <td onClick={deleteClaim}>X</td>
+                                </tr>
+                            } else {
+                                return <tr>
+                                    <td>{data.EmployeeID}</td>
+                                    <td>{data.Status}</td>
+                                    <td>{data.ProjectID}</td>
+                                    <td><Link to={'/updateClaim/'}>{data.ClaimID}</Link></td>
+                                    <td>{data.CurrencyID}</td>
+                                    <td onClick={deleteClaim}>X</td>
+                                </tr>
+                            }
                         }
-                    }
-                    )}   
-                </tbody>
-            </table>
-        </div>
+                        )}   
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                
+            </div>
+        </body>
     )
 }
 
